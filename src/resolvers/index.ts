@@ -6,7 +6,8 @@ import config from "../config";
 
 const resolvers: IResolversMap = {
   Query: {
-    users: forwardTo("db")
+    users: forwardTo("db"),
+    user: forwardTo("db")
   },
   Mutation: {
     login: async (_, args, ctx) => {

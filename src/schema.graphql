@@ -11,7 +11,8 @@ type Query {
     before: String
     first: Int
     last: Int
-  ): [User]!
+  ): [User!]!
+  user(where: UserWhereUniqueInput!): User!
 }
 
 type Mutation {
