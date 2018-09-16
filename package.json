@@ -9,12 +9,16 @@
     "dev": "nodemon -w src -e ts,graphql -x ts-node src/index.ts"
   },
   "dependencies": {
+    "bcrypt": "^3.0.0",
     "dotenv": "^6.0.0",
     "graphql-yoga": "^1.16.2",
+    "jsonwebtoken": "^8.3.0",
     "prisma-binding": "^2.1.5"
   },
   "devDependencies": {
+    "@types/bcrypt": "^2.0.0",
     "@types/dotenv": "^4.0.3",
+    "@types/jsonwebtoken": "^7.2.8",
     "nodemon": "^1.18.4",
     "ts-node": "^7.0.1",
     "typescript": "^3.0.3"

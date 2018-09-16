@@ -1,5 +1,34 @@
-# import Users from "./generated/prisma.graphql"
+# import * from "./generated/prisma.graphql"
+
+scalar DateTime
 
 type Query {
-  users: [User]!
+  users(
+    where: UserWhereInput
+    orderBy: UserOrderByInput
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): [User]!
+}
+
+type Mutation {
+  register(name: String!, email: String!, password: String!): AuthPayload!
+  login(email: String!, password: String!): AuthPayload!
+}
+
+type AuthPayload {
+  token: String!
+  user: User!
+}
+
+type User {
+  id: ID!
+  name: String!
+  email: String!
+
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }

@@ -3,12 +3,13 @@ import { Prisma } from "./generated/prisma";
 
 import config from "./config";
 import resolvers from "./resolvers";
+import { IContext } from "./utils";
 
 const server = new GraphQLServer({
   resolverValidationOptions: { requireResolversForResolveType: false },
   typeDefs: "./src/schema.graphql",
   resolvers,
-  context: req => ({
+  context: (req): IContext => ({
     ...req,
     db: new Prisma({
       debug: config.NODE_ENV !== "production",

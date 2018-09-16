@@ -1,8 +1,9 @@
 import * as dotenv from "dotenv";
 
 interface IConfig {
-  PORT: number;
   NODE_ENV: "production" | "development";
+  PORT: number;
+  JWT_SECRET: string;
 
   PRISMA_ENDPOINT: string;
   PRISMA_MANAGEMENT_API_SECRET: string;
