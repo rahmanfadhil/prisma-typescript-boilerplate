@@ -4,6 +4,9 @@ Complete Prisma GraphQL boilerplate with authentication
 
 ## How to use
 
+- Copy .env.example to .env (you can change it by your self)
+- Run this command below
+
 ```sh
 yarn install # Install dependencies
 
