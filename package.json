@@ -1,0 +1,22 @@
+{
+  "name": "fullstack-graphql",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Rahman Fadhil <rhmnfadhil@gmail.com> (http://rahmanfadhil.com)",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "dev": "nodemon -w src -e ts,graphql -x ts-node src/index.ts"
+  },
+  "dependencies": {
+    "dotenv": "^6.0.0",
+    "graphql-yoga": "^1.16.2",
+    "prisma-binding": "^2.1.5"
+  },
+  "devDependencies": {
+    "@types/dotenv": "^4.0.3",
+    "nodemon": "^1.18.4",
+    "ts-node": "^7.0.1",
+    "typescript": "^3.0.3"
+  }
+}
