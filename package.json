@@ -6,16 +6,18 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "build": "rimraf dist && tsc && cp ./src/schema/*.graphql ./dist/schema",
+    "build": "rimraf dist && tsc && mkdir -p ./dist/schema && cp ./src/schema/*.graphql ./dist/schema",
     "start": "nodemon -w src -e ts,graphql -x ts-node src/index.ts",
     "dev": "npm-run-all --parallel start playground",
     "playground": "graphql playground"
   },
   "dependencies": {
     "@sendgrid/mail": "^6.3.1",
+    "@types/ioredis": "^4.0.1",
     "bcrypt": "^3.0.0",
     "dotenv": "^6.0.0",
     "graphql-yoga": "^1.16.2",
+    "ioredis": "^4.0.0",
     "jsonwebtoken": "^8.3.0",
     "prisma-binding": "^2.1.5"
   },

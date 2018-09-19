@@ -19,8 +19,10 @@ type Query {
 
 type Mutation {
   # Users
-  register(name: String!, email: String!, password: String!): AuthPayload!
   login(email: String!, password: String!): AuthPayload!
+  register(name: String!, email: String!, password: String!): AuthPayload!
+  forgotPassword(email: String!): Boolean!
+  resetPassword(token: String!, new_password: String!): Boolean!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   deleteUser(where: UserWhereUniqueInput!): User
   updateManyUsers(data: UserUpdateInput!, where: UserWhereInput!): BatchPayload!

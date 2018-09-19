@@ -1,16 +1,12 @@
 import { GraphQLServer } from "graphql-yoga";
-import { Prisma } from "./prisma";
 import { join } from "path";
 
 import config from "./config";
 import resolvers from "./resolvers";
-import { IContext, getUserByToken, decodeVerifyEmailToken } from "./utils";
+import { getUserByToken } from "./utils";
 import serverHandler from "./server";
-
-const prisma = new Prisma({
-  debug: config.NODE_ENV !== "production",
-  endpoint: config.PRISMA_ENDPOINT
-});
+import prisma from "./config/prisma.config";
+import { IContext } from "./utils/types";
 
 const server = new GraphQLServer({
   resolverValidationOptions: { requireResolversForResolveType: false },
@@ -19,11 +15,11 @@ const server = new GraphQLServer({
   context: (req): IContext => ({
     ...req,
     db: prisma,
-    getUser: () => getUserByToken(prisma, req.request.headers.authorization)
+    getUser: () => getUserByToken(req.request.headers.authorization)
   })
 });
 
-serverHandler(server.express, prisma);
+serverHandler(server.express);
 
 server.start({ port: config.PORT }, () => {
   console.log(`[server] listening on port ${config.PORT}`);

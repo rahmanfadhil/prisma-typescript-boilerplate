@@ -1,10 +1,11 @@
 import { compare, hash } from "bcrypt";
 import { forwardTo } from "prisma-binding";
 
-import { IResolversMap } from "../utils";
-import { generateToken } from "../utils";
+import { IResolversMap } from "../utils/types";
+import { generateToken, getUserByToken } from "../utils";
 import mail from "../config/mail.config";
 import config from "../config";
+import redis from "../config/redis.config";
 
 const userController: IResolversMap = {
   Query: {
@@ -52,6 +53,27 @@ const userController: IResolversMap = {
         text: verifyURL
       });
       return { token, user };
+    },
+    forgotPassword: async (_, { email }, ctx) => {
+      const user = await ctx.db.query.user({ where: { email } });
+      if (!user) throw new Error("User not found!");
+      const token = generateToken(user.id);
+      await redis.set(`reset_password:${user.email}`, token);
+      await redis.expire(`reset_password:${user.email}`, 43200);
+      return true;
+    },
+    resetPassword: async (_, { token, new_password }, ctx) => {
+      const user = await getUserByToken(token);
+      if (!user) throw new Error("User not found!");
+      const data = await redis.get(`reset_password:${user.email}`);
+      if (!data) throw new Error("Token not valid!");
+      const password = await hash(new_password, 10);
+      await ctx.db.mutation.updateUser({
+        where: { id: user.id },
+        data: { password }
+      });
+      await redis.del(`reset_password:${user.email}`);
+      return true;
     }
   }
 };

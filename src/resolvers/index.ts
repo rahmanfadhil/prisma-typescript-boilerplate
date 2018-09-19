@@ -1,4 +1,4 @@
-import { IResolversMap } from "../utils";
+import { IResolversMap } from "../utils/types";
 import userController from "./user.resolver";
 
 const resolvers: IResolversMap = {
