@@ -1,8 +1,9 @@
-# import * from "./generated/prisma.graphql"
+# import * from "./prisma.graphql"
 
 scalar DateTime
 
 type Query {
+  # Users
   users(
     where: UserWhereInput
     orderBy: UserOrderByInput
@@ -13,11 +14,17 @@ type Query {
     last: Int
   ): [User!]!
   user(where: UserWhereUniqueInput!): User!
+  me: User!
 }
 
 type Mutation {
+  # Users
   register(name: String!, email: String!, password: String!): AuthPayload!
   login(email: String!, password: String!): AuthPayload!
+  updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
+  deleteUser(where: UserWhereUniqueInput!): User
+  updateManyUsers(data: UserUpdateInput!, where: UserWhereInput!): BatchPayload!
+  deleteManyUsers(where: UserWhereInput!): BatchPayload!
 }
 
 type AuthPayload {

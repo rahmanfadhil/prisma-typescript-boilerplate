@@ -1,21 +1,24 @@
 import { GraphQLServer } from "graphql-yoga";
-import { Prisma } from "./generated/prisma";
+import { Prisma } from "./prisma";
+import { join } from "path";
 
 import config from "./config";
 import resolvers from "./resolvers";
-import { IContext } from "./utils";
+import { IContext, getUserByToken } from "./utils";
+
+const prisma = new Prisma({
+  debug: config.NODE_ENV !== "production",
+  endpoint: config.PRISMA_ENDPOINT
+});
 
 const server = new GraphQLServer({
   resolverValidationOptions: { requireResolversForResolveType: false },
-  typeDefs: "./src/schema.graphql",
+  typeDefs: join(__dirname, "./schema/schema.graphql"),
   resolvers,
   context: (req): IContext => ({
     ...req,
-    db: new Prisma({
-      debug: config.NODE_ENV !== "production",
-      endpoint: config.PRISMA_ENDPOINT,
-      secret: config.PRISMA_MANAGEMENT_API_SECRET
-    })
+    db: prisma,
+    getUser: () => getUserByToken(prisma, req.request.headers.authorization)
   })
 });
 
