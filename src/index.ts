@@ -5,6 +5,7 @@ import { join } from "path";
 import config from "./config";
 import resolvers from "./resolvers";
 import { IContext, getUserByToken, decodeVerifyEmailToken } from "./utils";
+import serverHandler from "./server";
 
 const prisma = new Prisma({
   debug: config.NODE_ENV !== "production",
@@ -22,16 +23,7 @@ const server = new GraphQLServer({
   })
 });
 
-server.express.get("/verify_account", async (req, res) => {
-  if (!req.query.token)
-    return res.send({ error: true, message: "Token not found!" });
-  try {
-    const data = await decodeVerifyEmailToken(prisma, req.query.token);
-    res.send({ error: false, message: `${data.email} is verified!` });
-  } catch (err) {
-    res.send({ error: true, message: err });
-  }
-});
+serverHandler(server.express, prisma);
 
 server.start({ port: config.PORT }, () => {
   console.log(`[server] listening on port ${config.PORT}`);
