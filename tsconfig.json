@@ -6,7 +6,6 @@
     "sourceMap": false,
     "rootDir": "src",
     "outDir": "dist",
-    "allowSyntheticDefaultImports": true,
     "lib": ["esnext", "dom"]
   }
 }
