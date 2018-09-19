@@ -8,8 +8,13 @@ interface IConfig {
 
   PRISMA_ENDPOINT: string;
 
-  SENDGRID_KEY: string;
-  SENDGRID_EMAIL: string;
+  SENDER_EMAIL: string;
+
+  GOOGLE_CLIENT_ID: string;
+  GOOGLE_CLIENT_SECRET: string;
+
+  GOOGLE_OAUTH_REFRESH_TOKEN: string;
+  GOOGLE_OAUTH_ACCESS_TOKEN: string;
 }
 
 const config: IConfig = dotenv.config().parsed as any;

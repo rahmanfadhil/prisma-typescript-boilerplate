@@ -3,7 +3,7 @@ import { forwardTo } from "prisma-binding";
 
 import { IResolversMap } from "../utils/types";
 import { generateToken, getUserByToken } from "../utils";
-import mail from "../config/mail.config";
+import mail, { sendEmail } from "../config/mail.config";
 import config from "../config";
 import redis from "../config/redis.config";
 
@@ -42,15 +42,13 @@ const userController: IResolversMap = {
       });
       const token = generateToken(user.id);
       const verifyURL = `${config.BASE_URL}/verify_account?token=${token}`;
-      await mail.send({
-        subject: "Account confirmation",
-        from: config.SENDGRID_EMAIL,
+      await sendEmail({
         to: email,
-        html: `
-          <h1>Please confirm your account</h1>
+        subject: "Confirm your account",
+        content: `
+          <h1>Please confirm your account<h1>
           <a href="${verifyURL}">${verifyURL}</a>
-        `,
-        text: verifyURL
+        `
       });
       return { token, user };
     },
@@ -60,6 +58,15 @@ const userController: IResolversMap = {
       const token = generateToken(user.id);
       await redis.set(`reset_password:${user.email}`, token);
       await redis.expire(`reset_password:${user.email}`, 43200);
+      const verifyURL = `${config.BASE_URL}/forgot_password?token=${token}`;
+      await sendEmail({
+        to: email,
+        subject: "Forgot password",
+        content: `
+          <h1>Please click this link toreset your password<h1>
+          <a href="${verifyURL}">${verifyURL}</a>
+        `
+      });
       return true;
     },
     resetPassword: async (_, { token, new_password }, ctx) => {
