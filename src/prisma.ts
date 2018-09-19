@@ -123,6 +123,7 @@ type User implements Node {
   name: String!
   email: String!
   password: String!
+  email_verified: Boolean
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -141,6 +142,7 @@ input UserCreateInput {
   name: String!
   email: String!
   password: String!
+  email_verified: Boolean
 }
 
 """An edge in a connection."""
@@ -161,6 +163,8 @@ enum UserOrderByInput {
   email_DESC
   password_ASC
   password_DESC
+  email_verified_ASC
+  email_verified_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
@@ -172,6 +176,7 @@ type UserPreviousValues {
   name: String!
   email: String!
   password: String!
+  email_verified: Boolean
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -219,6 +224,7 @@ input UserUpdateInput {
   name: String
   email: String
   password: String
+  email_verified: Boolean
 }
 
 input UserWhereInput {
@@ -390,6 +396,10 @@ input UserWhereInput {
 
   """All values not ending with the given string."""
   password_not_ends_with: String
+  email_verified: Boolean
+
+  """All values that are not equal to given value."""
+  email_verified_not: Boolean
   createdAt: DateTime
 
   """All values that are not equal to given value."""
@@ -456,6 +466,8 @@ export type UserOrderByInput =   'id_ASC' |
   'email_DESC' |
   'password_ASC' |
   'password_DESC' |
+  'email_verified_ASC' |
+  'email_verified_DESC' |
   'createdAt_ASC' |
   'createdAt_DESC' |
   'updatedAt_ASC' |
@@ -474,12 +486,14 @@ export interface UserCreateInput {
   name: String
   email: String
   password: String
+  email_verified?: Boolean
 }
 
 export interface UserUpdateInput {
   name?: String
   email?: String
   password?: String
+  email_verified?: Boolean
 }
 
 export interface UserSubscriptionWhereInput {
@@ -553,6 +567,8 @@ export interface UserWhereInput {
   password_not_starts_with?: String
   password_ends_with?: String
   password_not_ends_with?: String
+  email_verified?: Boolean
+  email_verified_not?: Boolean
   createdAt?: DateTime
   createdAt_not?: DateTime
   createdAt_in?: DateTime[] | DateTime
@@ -579,19 +595,6 @@ export interface Node {
   id: ID_Output
 }
 
-export interface UserPreviousValues {
-  id: ID_Output
-  name: String
-  email: String
-  password: String
-  createdAt: DateTime
-  updatedAt: DateTime
-}
-
-export interface BatchPayload {
-  count: Long
-}
-
 /*
  * Information about pagination in a connection.
 
@@ -603,17 +606,24 @@ export interface PageInfo {
   endCursor?: String
 }
 
+export interface UserPreviousValues {
+  id: ID_Output
+  name: String
+  email: String
+  password: String
+  email_verified?: Boolean
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
 export interface User extends Node {
   id: ID_Output
   name: String
   email: String
   password: String
+  email_verified?: Boolean
   createdAt: DateTime
   updatedAt: DateTime
-}
-
-export interface AggregateUser {
-  count: Int
 }
 
 /*
@@ -623,13 +633,6 @@ export interface AggregateUser {
 export interface UserEdge {
   node: User
   cursor: String
-}
-
-export interface UserSubscriptionPayload {
-  mutation: MutationType
-  node?: User
-  updatedFields?: String[]
-  previousValues?: UserPreviousValues
 }
 
 /*
@@ -642,15 +645,22 @@ export interface UserConnection {
   aggregate: AggregateUser
 }
 
-/*
-The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1. 
-*/
-export type Int = number
+export interface UserSubscriptionPayload {
+  mutation: MutationType
+  node?: User
+  updatedFields?: String[]
+  previousValues?: UserPreviousValues
+}
 
-/*
-The `Boolean` scalar type represents `true` or `false`.
-*/
-export type Boolean = boolean
+export interface AggregateUser {
+  count: Int
+}
+
+export interface BatchPayload {
+  count: Long
+}
+
+export type DateTime = Date | string
 
 /*
 The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `"4"`) or integer (such as `4`) input value will be accepted as an ID.
@@ -659,11 +669,19 @@ export type ID_Input = string | number
 export type ID_Output = string
 
 /*
+The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1. 
+*/
+export type Int = number
+
+/*
 The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
 */
 export type String = string
 
-export type DateTime = Date | string
+/*
+The `Boolean` scalar type represents `true` or `false`.
+*/
+export type Boolean = boolean
 
 /*
 The `Long` scalar type represents non-fractional signed whole numeric values.

@@ -1,5 +1,5 @@
-# source: http://localhost:4466
-# timestamp: Sun Sep 16 2018 13:52:50 GMT+0700 (Western Indonesia Time)
+# source: https://eu1.prisma.sh/rahman-fadhil-ca7e1b/prisma-typescript/dev
+# timestamp: Wed Sep 19 2018 16:13:11 GMT+0700 (Western Indonesia Time)
 
 type AggregateUser {
   count: Int!
@@ -75,6 +75,7 @@ type User implements Node {
   name: String!
   email: String!
   password: String!
+  email_verified: Boolean
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -93,6 +94,7 @@ input UserCreateInput {
   name: String!
   email: String!
   password: String!
+  email_verified: Boolean
 }
 
 """An edge in a connection."""
@@ -113,6 +115,8 @@ enum UserOrderByInput {
   email_DESC
   password_ASC
   password_DESC
+  email_verified_ASC
+  email_verified_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
@@ -124,6 +128,7 @@ type UserPreviousValues {
   name: String!
   email: String!
   password: String!
+  email_verified: Boolean
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -171,6 +176,7 @@ input UserUpdateInput {
   name: String
   email: String
   password: String
+  email_verified: Boolean
 }
 
 input UserWhereInput {
@@ -342,6 +348,10 @@ input UserWhereInput {
 
   """All values not ending with the given string."""
   password_not_ends_with: String
+  email_verified: Boolean
+
+  """All values that are not equal to given value."""
+  email_verified_not: Boolean
   createdAt: DateTime
 
   """All values that are not equal to given value."""

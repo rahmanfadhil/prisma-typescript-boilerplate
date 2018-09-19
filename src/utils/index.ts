@@ -1,5 +1,5 @@
 import { ContextParameters } from "graphql-yoga/dist/types";
-import jwt from "jsonwebtoken";
+import * as jwt from "jsonwebtoken";
 
 import { Prisma, User } from "../prisma";
 import config from "../config";
@@ -41,5 +41,22 @@ export async function getUserByToken(
     }
   } else {
     return false;
+  }
+}
+
+export async function decodeVerifyEmailToken(db: Prisma, token): Promise<User> {
+  try {
+    const { id }: any = jwt.verify(token, config.JWT_SECRET);
+    const user = await db.query.user({ where: { id } });
+    if (!user) throw new Error("Token invalid!");
+    await db.mutation.updateUser({
+      where: { id },
+      data: {
+        email_verified: true
+      }
+    });
+    return user;
+  } catch (err) {
+    throw new Error("Token invalid!");
   }
 }

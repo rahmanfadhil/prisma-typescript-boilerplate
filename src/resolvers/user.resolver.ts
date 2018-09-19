@@ -1,10 +1,10 @@
 import { compare, hash } from "bcrypt";
-import jwt from "jsonwebtoken";
-
-import config from "../config";
-import { IResolversMap } from "../utils";
 import { forwardTo } from "prisma-binding";
+
+import { IResolversMap } from "../utils";
 import { generateToken } from "../utils";
+import mail from "../config/mail.config";
+import config from "../config";
 
 const userController: IResolversMap = {
   Query: {
@@ -39,7 +39,19 @@ const userController: IResolversMap = {
       const user = await ctx.db.mutation.createUser({
         data: { name, email, password }
       });
-      return { token: generateToken(user.id), user };
+      const token = generateToken(user.id);
+      const verifyURL = `${config.BASE_URL}/verify_account?token=${token}`;
+      await mail.send({
+        subject: "Account confirmation",
+        from: config.SENDGRID_EMAIL,
+        to: email,
+        html: `
+          <h1>Please confirm your account</h1>
+          <a href="${verifyURL}">${verifyURL}</a>
+        `,
+        text: verifyURL
+      });
+      return { token, user };
     }
   }
 };

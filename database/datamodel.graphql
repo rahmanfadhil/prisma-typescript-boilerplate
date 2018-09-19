@@ -3,6 +3,7 @@ type User {
   name: String!
   email: String! @unique
   password: String!
+  email_verified: Boolean @default(value: "false")
 
   createdAt: DateTime!
   updatedAt: DateTime!
